@@ -1,6 +1,6 @@
 pipeline{
  tools{
-        jdk 'JAVA_HOME'
+        jdk 'JAVA_HOME_MASTER'
         maven 'M2_HOME'
     }
      agent any
