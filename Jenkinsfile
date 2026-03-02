@@ -1,6 +1,6 @@
 pipeline{
  tools{
-        jdk 'JAVA_HOME_MASTER'
+        jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
      agent any
@@ -9,7 +9,7 @@ pipeline{
 	  
 	  stage("checkout"){
 	   steps{
-	   git 'https://github.com/nishankainfo/webapp.git'
+	   git 'https://github.com/tycoonvirat-dot/jenkins-tomcat-webapp.git'
 	   }
 	                  }
 	
@@ -30,35 +30,23 @@ pipeline{
 
 		}
 		}
-   stage("deploy"){
-	   steps{
-
-      sshagent(['tomcat']){
-
-	        sh """
+		  
+      stage("deploy"){
+	    steps{
+		 
+       sshagent(['tomcat-key']) {
+			sh """
                  
-            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@43.204.109.89:/home/ec2-user/tomcat10/webapps/
+            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@13.232.251.14:/home/ec2-user/tomcat10/webapps/
 
-              ssh ec2-user@43.204.109.89 /home/ec2-user/tomcat10/bin/shutdown.sh
-               ssh ec2-user@43.204.109.89 /home/ec2-user/tomcat10/bin/startup.sh
+              ssh ec2-user@13.232.251.14 /home/ec2-user/tomcat10/bin/shutdown.sh
+              ssh ec2-user@13.232.251.14 /home/ec2-user/tomcat10/bin/startup.sh
             
           
           """
-
+	// some block
 }
-
-	   
 		}
-		  
+		}
 	  }
-stage(backup)
-		  {
-  steps{
-
-	  nexusArtifactUploader artifacts: [[artifactId: 'idream-it-solutions', classifier: '', file: 'target/myweb.war', type: '.war']], credentialsId: 'nexus', groupId: 'com.idream.webapp', nexusUrl: '13.204.79.196:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'repoR', version: '1.1'
-  }
-	
-}
-
-	}
 	}
