@@ -68,12 +68,12 @@
 <repository>
 <id>repoR</id>
 <name>repoR</name>
-<url>http://3.111.53.177:8081/repository/repoR/</url>
+<url>http://13.201.225.244:8081/repository/repoR/</url>
 </repository>
 <snapshotRepository>
 <id>repoS</id>
 <name>repoS</name>
-<url>http://3.111.53.177:8081/repository/repoS/</url>
+<url>http://13.201.225.244:8081/repository/repoS/</url>
 </snapshotRepository>
 </distributionManagement>
 </project>
