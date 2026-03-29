@@ -8,10 +8,10 @@ pipeline{
 	  stages{
 	  
 	  stage("checkout"){
-	   steps{
-	   git 'https://github.com/tycoonvirat-dot/jenkins-tomcat-webapp.git'
-	   }
-	                  }
+   steps{
+      git credentialsId: 'github-creds', url: 'https://github.com/tycoonvirat-dot/jenkins-tomcat-webapp.git'
+   		}
+		}
 	
 	   stage("compile"){
 	    steps{
