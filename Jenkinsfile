@@ -6,6 +6,11 @@ pipeline {
         maven 'M2_HOME'
     }
 
+    environment {
+        IMAGE_NAME = 'mywebapp'
+        CONTAINER_NAME = 'mywebapp-container'
+    }
+
     stages {
 
         stage('Checkout') {
@@ -14,44 +19,27 @@ pipeline {
             }
         }
 
-        stage('Compile') {
-            steps {
-                sh 'mvn compile'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Package') {
+        stage('Build') {
             steps {
                 sh 'mvn clean package'
                 sh 'mv target/*.war target/myweb.war'
             }
         }
 
-        stage('Backup (Deploy to Nexus)') {
+        stage('Docker Build') {
             steps {
-                sh 'mvn deploy'
+                sh 'docker build -t $IMAGE_NAME .'
             }
         }
 
-        /*
-        stage('Deploy to Tomcat') {
+        stage('Run Container') {
             steps {
-                sshagent(['tomcat']) {
-                    sh """
-                    scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@13.204.75.174:/home/ec2-user/tomcat10/webapps/
-
-                    ssh ec2-user@13.204.75.174 /home/ec2-user/tomcat10/bin/shutdown.sh
-                    ssh ec2-user@13.204.75.174 /home/ec2-user/tomcat10/bin/startup.sh
-                    """
-                }
+                sh '''
+                docker stop $CONTAINER_NAME || true
+                docker rm $CONTAINER_NAME || true
+                docker run -d -p 8080:8080 --name $CONTAINER_NAME $IMAGE_NAME
+                '''
             }
         }
-        */
     }
 }
