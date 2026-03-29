@@ -1,5 +1,9 @@
-FROM tomcat:10
+FROM tomcat:10-jdk17
 
-COPY target/*.war /usr/local/tomcat/webapps/
+# remove default apps
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+# copy your WAR
+COPY target/myweb.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080
